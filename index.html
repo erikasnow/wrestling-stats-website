@@ -9,27 +9,68 @@
 
 <body>
     <div>
-        <h1>
-            Wrestling Tournament Stats
-        </h1>
+        <h1>Wrestling Tournament Stats</h1>
+    </div>
+
+    <div>
+        <button>Create Entry</button>
+        <!--needs an onClick and maybe styling-->
     </div>
 
     <table style="width:100%">
         <tr>
-            <th>Red Wrestler</th> <!--what if this and the score were both under one heading?-->
-            <th>Score</th>
-            <th>Green Wrestler</th>
-            <th>Score</th>
-            <th>Winner</th> <!--What if I just highlighted the winner's name?-->
-            <th>Outcome</th> <!--eg. tech pin, pin, major, etc.-->
+            <th colspan="2" style="background-color:rgb(255, 44, 44)">Red Wrestler</th>
+            <th colspan="2" style="background-color: rgb(68, 146, 68)">Green Wrestler</th>
+            <th colspan="2" style="background-color: lightgrey">Outcome</th>
         </tr>
-        <tr> <!--these will all be automated eventually-->
-            <td>Erika</td>
+        <tr>
+            <th style="background-color:rgb(255, 44, 44)">Name</th>
+            <th style="background-color:rgb(255, 44, 44)">Score</th>
+            <th style="background-color: rgb(68, 146, 68)">Name</th>
+            <th style="background-color: rgb(68, 146, 68)">Score</th>
+            <th>Winner</th>
+            <!--What if I just highlighted the winner's name?-->
+            <th>Type</th> <!--eg. tech pin, pin, major, etc.-->
+        </tr>
+        <tr>
+            <!--these will all be automated eventually-->
+            <td>E. Snow</td>
             <td>20</td>
-            <td>Nick</td>
+            <td>T. Dure</td>
             <td>4</td>
-            <td>Erika</td>
+            <td>E. Snow</td>
             <td>Technical Pin</td>
+            <td style="width:1%">
+                <button onClick="edit()">Edit</button>
+                <button onClick="save()" style="display:none">Save</button>
+            </td>
+            <td style="width:1%">
+                <button>Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>R. Dorman</td>
+            <td>4</td>
+            <td>E. Snow</td>
+            <td>1</td>
+            <td>R. Dorman</td>
+            <td>Pin</td>
+            <td style="width:1%">
+                <button onClick="edit()">Edit</button><!--when this is clicked, make contenteditable="true"-->
+                <button onClick="save()" style="display:none">Save</button>
+            </td>
+            <td style="width:1%">
+                <button>Delete</button>
+            </td>
         </tr>
     </table>
 </body>
+<script>
+    function edit(){
+
+    }
+    function save(){
+        
+    }
+</script>
+</html>
