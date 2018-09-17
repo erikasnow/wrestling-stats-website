@@ -10,3 +10,7 @@ tr:nth-child(even) {
 h1 {
     text-align: center;
 }
+
+button {
+    min-width: 70px;
+}

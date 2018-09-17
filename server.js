@@ -28,6 +28,8 @@ var server = http.createServer(function (req, res) {
         break
       case '/read':
         break
+      case '/update':
+        break
         /*
       case '/results.js':
         sendFile(res, 'results.js', 'text/javascript')
