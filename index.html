@@ -12,11 +12,11 @@
         <h1>Wrestling Tournament Stats</h1>
     </div>
 
-    <div>
+    <div style="padding-bottom:5px">
         <button id="createButton" onclick="create_row()">Create Entry</button>
     </div>
 
-    <div id="createTable" style="display:none">
+    <div id="createTable" style="display:none;padding-bottom:5px">
         <table style="width:100%">
             <tr>
                 <th colspan="2" style="background-color:rgb(255, 44, 44)">Red Wrestler</th>
@@ -24,11 +24,11 @@
                 <th colspan="2" style="background-color: lightgrey">Outcome</th>
             </tr>
             <tr>
-                <th style="background-color:rgb(255, 44, 44)">Name</th>
-                <th style="background-color:rgb(255, 44, 44)">Score</th>
-                <th style="background-color: rgb(68, 146, 68)">Name</th>
-                <th style="background-color: rgb(68, 146, 68)">Score</th>
-                <th>Winner</th>
+                <th class="name" style="background-color:rgb(255, 44, 44)">Name</th>
+                <th class="score" style="background-color:rgb(255, 44, 44)">Score</th>
+                <th class="name" style="background-color: rgb(68, 146, 68)">Name</th>
+                <th class="score" style="background-color: rgb(68, 146, 68)">Score</th>
+                <th class="name">Winner</th>
                 <th>Type</th>
             </tr>
             <tr>
@@ -48,25 +48,25 @@
         </table>
     </div>
 
-    <div id="updateTable" style="display:none">
+    <div id="updateTable" style="display:none;padding-bottom:5px">
             <table style="width:100%">
                 <tr>
-                    <th>Meta</th>
+                    <th style="display:none">Meta</th>
                     <th colspan="2" style="background-color:rgb(255, 44, 44)">Red Wrestler</th>
                     <th colspan="2" style="background-color: rgb(68, 146, 68)">Green Wrestler</th>
                     <th colspan="2" style="background-color: lightgrey">Outcome</th>
                 </tr>
                 <tr>
-                    <th>Id</th>
-                    <th style="background-color:rgb(255, 44, 44)">Name</th>
-                    <th style="background-color:rgb(255, 44, 44)">Score</th>
-                    <th style="background-color: rgb(68, 146, 68)">Name</th>
-                    <th style="background-color: rgb(68, 146, 68)">Score</th>
-                    <th>Winner</th>
+                    <th style="display:none">Id</th>
+                    <th class="name" style="background-color:rgb(255, 44, 44)">Name</th>
+                    <th class="score" style="background-color:rgb(255, 44, 44)">Score</th>
+                    <th class="name" style="background-color: rgb(68, 146, 68)">Name</th>
+                    <th class="score" style="background-color: rgb(68, 146, 68)">Score</th>
+                    <th class="name">Winner</th>
                     <th>Type</th>
                 </tr>
                 <tr>
-                    <td id="uId"></td> <!--should not be editable-->
+                    <td style="display:none" id="uId"></td> <!--should not be editable-->
                     <td id="uRedName" contenteditable="true"></td>
                     <td id="uRedScore" contenteditable="true"></td>
                     <td id="uGreenName" contenteditable="true"></td>
@@ -90,11 +90,11 @@
             <th colspan="2" style="background-color: lightgrey">Outcome</th>
         </tr>
         <tr>
-            <th style="background-color:rgb(255, 44, 44)">Name</th>
-            <th style="background-color:rgb(255, 44, 44)">Score</th>
-            <th style="background-color: rgb(68, 146, 68)">Name</th>
-            <th style="background-color: rgb(68, 146, 68)">Score</th>
-            <th>Winner</th>
+            <th class="name" style="background-color:rgb(255, 44, 44)">Name</th>
+            <th class="score" style="background-color:rgb(255, 44, 44)">Score</th>
+            <th class="name" style="background-color: rgb(68, 146, 68)">Name</th>
+            <th class="score" style="background-color: rgb(68, 146, 68)">Score</th>
+            <th class="name">Winner</th>
             <!--What if I just highlighted the winner's name?-->
             <th>Type</th>
             <!--eg. tech pin, pin, major, etc.-->

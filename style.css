@@ -14,3 +14,11 @@ h1 {
 button {
     min-width: 70px;
 }
+
+.name {
+    width: 250px;
+}
+
+.score {
+    width: 100px;
+}
