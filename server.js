@@ -3,7 +3,10 @@ var http = require('http')
   , url = require('url')
   , port = 8080;
 
-var dataSet;
+// db setup
+var db = new sql.Database('tournament.sqlite');
+
+//var dataSet;
 
 function grabData() {
 /* gotta use the database for this part somehow
@@ -27,44 +30,14 @@ var server = http.createServer(function (req, res) {
         sendFile(res, 'index.html')
         break
       case '/read':
+        read(res);
         break
       case '/update':
+        update(res, req);
         break
-        /*
-      case '/results.js':
-        sendFile(res, 'results.js', 'text/javascript')
-        break
-      case '/form.html':
-        sendFile(res, 'form.html')
-        break
-      case '/results.html':
-        sendFile(res, 'results.html')
-        break
-        */
       case '/style.css':
         sendFile(res, 'style.css', 'text/css')
         break
-        /*
-      case '/data': //sends recieved data from client and puts in database
-        var body = '';
-        req.on('data', function (data) {
-          body += data;
-        });
-        req.on('end', function () {
-          var parsedData = (JSON.parse((body)));
-          addHumanYears(parsedData);
-          dataSet.push(parsedData)
-          fs.writeFile('public/includes/data.JSON', JSON.stringify(dataSet, null, 2), function (err) {
-            if (err) throw err;
-          });
-        });
-        res.writeHead(
-          200,
-          { 'Content-type': 'text/html' }
-        )
-        res.end('post recieved');
-        break
-        */
       default:
         res.end('404 not found')
     }
@@ -81,4 +54,52 @@ function sendFile(res, filename, contentType) {
       res.writeHead(200, { 'Content-type': contentType })
       res.end(content, 'utf-8')
     })
+}
+
+// common technique for a 'unique' alphanumeric id 
+function new_id() {
+  return Date.now().toString(36)
+}
+
+// read all data from database and send to res
+function read(res) {
+  var matches = [];
+  db.each(
+    "SELECT id, redName, redScore, greenName, greenScore, winner, winType FROM tournament",  // database query
+    function(err, row) { matches.push(row) }, // called for each row returned
+    function() { res.end( JSON.stringify(matches) ) } // called last
+  )
+}
+
+// update specific line in database, using info in req, the request from the client
+function update(res, req) {
+  //process incoming data
+  let body = []
+  req.on('data', (chunk) => {
+    body.push(chunk)
+  }).on('end', () => {
+    body = Buffer.concat(body).toString()
+    process( JSON.parse(body) )
+    res.end()
+  })
+
+  function process(row) {
+    if(debug) console.log(row)
+    var query = `
+      UPDATE tournament 
+      SET redName  = '${row.redName}',
+          redScore = '${row.redScore}',
+          greenName = '${row.greenName}',
+          greenScore = '${row.greenScore}',
+          winner = '${row.winner}',
+          winType = '${row.winType}'
+      WHERE
+          id = '${row.id}'
+    `
+    if(debug) console.log(query)
+    db.run( 
+      query,
+      function(err) { res.end('match updated') }
+    )
+  }
 }
