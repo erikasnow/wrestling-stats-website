@@ -13,8 +13,39 @@
     </div>
 
     <div>
-        <button>Create Entry</button>
-        <!--needs an onClick and maybe styling-->
+        <button id="createButton" onclick="create_row()">Create Entry</button>
+    </div>
+
+    <div id="createTable" style="display:none">
+        <table style="width:100%">
+            <tr>
+                <th colspan="2" style="background-color:rgb(255, 44, 44)">Red Wrestler</th>
+                <th colspan="2" style="background-color: rgb(68, 146, 68)">Green Wrestler</th>
+                <th colspan="2" style="background-color: lightgrey">Outcome</th>
+            </tr>
+            <tr>
+                <th style="background-color:rgb(255, 44, 44)">Name</th>
+                <th style="background-color:rgb(255, 44, 44)">Score</th>
+                <th style="background-color: rgb(68, 146, 68)">Name</th>
+                <th style="background-color: rgb(68, 146, 68)">Score</th>
+                <th>Winner</th>
+                <th>Type</th>
+            </tr>
+            <tr>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td style="width:1%">
+                    <button onclick="save_row()">Save</button>
+                </td>
+                <td style="width:1%">
+                    <button onclick="cancel()">Cancel</button>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <table style="width:100%">
@@ -30,8 +61,15 @@
             <th style="background-color: rgb(68, 146, 68)">Score</th>
             <th>Winner</th>
             <!--What if I just highlighted the winner's name?-->
-            <th>Type</th> <!--eg. tech pin, pin, major, etc.-->
+            <th>Type</th>
+            <!--eg. tech pin, pin, major, etc.-->
         </tr>
+        <div id="results">
+        </div>
+        <script>
+            var matchArr = [];
+            read();
+        </script>
         <tr>
             <!--these will all be automated eventually-->
             <td>E. Snow</td>
@@ -42,7 +80,6 @@
             <td>Technical Pin</td>
             <td style="width:1%">
                 <button onClick="edit()">Edit</button>
-                <button onClick="save()" style="display:none">Save</button>
             </td>
             <td style="width:1%">
                 <button>Delete</button>
@@ -56,8 +93,8 @@
             <td>R. Dorman</td>
             <td>Pin</td>
             <td style="width:1%">
-                <button onClick="edit()">Edit</button><!--when this is clicked, make contenteditable="true"-->
-                <button onClick="save()" style="display:none">Save</button>
+                <button onClick="edit()">Edit</button>
+                <!--when this is clicked, make contenteditable="true"-->
             </td>
             <td style="width:1%">
                 <button>Delete</button>
@@ -66,11 +103,50 @@
     </table>
 </body>
 <script>
-    function edit(){
+    function create_row() {
+        var x = document.getElementById("createTable");
+        x.style.display = "block";
+    }
+    function edit() {
 
     }
-    function save(){
-        
+    function save_row() {
+        var x = document.getElementById("createTable");
+        x.style.display = "none";
+    }
+    function cancel() {
+        var x = document.getElementById("createTable");
+        x.style.display = "none";
+    }
+    function build(rows) {
+        var results_html = `${
+            rows.map(match =>
+                `
+                <tr id=${match.id}>
+                <td>${match.redName}</td> |
+                <td>${match.redScore}</td> |
+                <td>${match.greenName}</td> |
+                <td>${match.greenScore}</td> |
+                <td>${match.winner}</td> |
+                <td>${match.winType}</td> |
+                <button id="edit_${match.id}" class="edit_btn" onclick="move_row('${match.id}')"> Edit </button>
+                <button id="delete_${match.id}" class="delete_btn" onclick="delete_row('${match.id}')"> Delete </button>
+                </tr>
+              `
+            ).join('')
+            }`
+        document.getElementById('results').innerHTML = results_html;
+    }
+    function read() {
+        var req = new XMLHttpRequest();
+        req.open("GET", "/read");
+        req.responseType = 'json';
+        req.onload = function () {
+            matchArr = req.response;
+            build(matchArr);
+        };
+        req.send();
     }
 </script>
+
 </html>
