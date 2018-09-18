@@ -13,7 +13,7 @@ db.serialize(function() {
   db.run("INSERT INTO matches VALUES ('jkl321', 'R. Dorman', 4, 'E. Snow', 1, 'R. Dorman', 'Pin')");
 
   // verify we can query data
-  db.each("SELECT id, redName, redScore, greenName, greenScore, winner, winType FROM movies", function(err, row) {
+  db.each("SELECT id, redName, redScore, greenName, greenScore, winner, winType FROM matches", function(err, row) {
       console.log(JSON.stringify(row));
   });
 

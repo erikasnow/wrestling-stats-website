@@ -4,6 +4,7 @@
     <title>Wrestling Tournament Stats</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="crud.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -83,7 +84,7 @@
             </table>
         </div>
 
-    <table style="width:100%">
+    <table id="results" style="width:100%">
         <tr>
             <th colspan="2" style="background-color:rgb(255, 44, 44)">Red Wrestler</th>
             <th colspan="2" style="background-color: rgb(68, 146, 68)">Green Wrestler</th>
@@ -99,120 +100,7 @@
             <th>Type</th>
             <!--eg. tech pin, pin, major, etc.-->
         </tr>
-        <div id="results">
-        </div>
-        <script>
-            var matchArr = [];
-            read();
-        </script>
-        <tr>
-            <!--these will all be automated eventually-->
-            <td>E. Snow</td>
-            <td>20</td>
-            <td>T. Dure</td>
-            <td>4</td>
-            <td>E. Snow</td>
-            <td>Technical Pin</td>
-            <td style="width:1%">
-                <button onclick="edit_row()">Edit</button>
-            </td>
-            <td style="width:1%">
-                <button>Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>R. Dorman</td>
-            <td>4</td>
-            <td>E. Snow</td>
-            <td>1</td>
-            <td>R. Dorman</td>
-            <td>Pin</td>
-            <td style="width:1%">
-                <button onclick="edit_row()">Edit</button>
-                <!--when this is clicked, make contenteditable="true"-->
-            </td>
-            <td style="width:1%">
-                <button>Delete</button>
-            </td>
-        </tr>
+        <!--this is where results from database go-->
     </table>
 </body>
-<script>
-    function create_row() {
-        var x = document.getElementById("createTable");
-        x.style.display = "block";
-    }
-    function save_row() {
-        var x = document.getElementById("createTable");
-        x.style.display = "none";
-    }
-    function cancel() {
-        var x = document.getElementById("createTable");
-        x.style.display = "none";
-    }
-    function edit_row(id) {
-        var x = document.getElementById("updateTable");
-        x.style.display = "block";
-
-        match_current = matchArr.filter( function(d){ return d.id === id; } )[0];
-        document.getElementById('uId').value = match_current.id;
-        document.getElementById('uRedName').value = match_current.redName;
-        document.getElementById('uRedScore').value = match_current.redScore;
-        document.getElementById('uGreenName').value = match_current.greenName;
-        document.getElementById('uGreenScore').value = match_current.greenScore;
-        document.getElementById('uWinner').value = match_current.winner;
-        document.getElementById('uWinType').value = match_current.winType;
-    }
-    function update_row() {
-        var x = document.getElementById("updateTable");
-        x.style.display = "none";
-
-        var match = {};
-        match.id = document.getElementById('uId').value;
-        match.redName = document.getElementById('uRedName').value;
-        match.redScore = document.getElementById('uRedScore').value;
-        match.greenName = document.getElementById('uGreenName').value;
-        match.greenScore = document.getElementById('uGreenScore').value;
-        match.winner = document.getElementById('winner').value;
-        match.winType = document.getElementById('winType').value;
-        var req = new XMLHttpRequest();
-        req.open('PUT', '/update');
-        req.responseType = 'text';
-        req.onload = function() { 
-            console.log('done!'); 
-            read(); 
-        }
-        req.send(JSON.stringify(match));
-    }
-    function build(rows) {
-        var results_html = `${
-            rows.map(match =>
-                `
-                <tr id=${match.id}>
-                <td>${match.redName}</td> |
-                <td>${match.redScore}</td> |
-                <td>${match.greenName}</td> |
-                <td>${match.greenScore}</td> |
-                <td>${match.winner}</td> |
-                <td>${match.winType}</td> |
-                <button id="edit_${match.id}" class="edit_btn" onclick="edit_row('${match.id}')"> Edit </button>
-                <button id="delete_${match.id}" class="delete_btn" onclick="delete_row('${match.id}')"> Delete </button>
-                </tr>
-              `
-            ).join('')
-            }`
-        document.getElementById('results').innerHTML = results_html;
-    }
-    function read() {
-        var req = new XMLHttpRequest();
-        req.open("GET", "/read");
-        req.responseType = 'json';
-        req.onload = function () {
-            matchArr = req.response;
-            build(matchArr);
-        };
-        req.send();
-    }
-</script>
-
 </html>

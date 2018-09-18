@@ -7,19 +7,6 @@ var http = require('http')
 // db setup
 var db = new sql.Database('tournament.sqlite');
 
-//var dataSet;
-
-function grabData() {
-/* gotta use the database for this part somehow
-  var json = fs.readFileSync('public/includes/data.JSON');
-
-  json = JSON.parse(json)
-  dataSet = (json);
-  */
-}
-
-grabData();
-
 var server = http.createServer(function (req, res) {
     var uri = url.parse(req.url)
   
@@ -29,6 +16,9 @@ var server = http.createServer(function (req, res) {
         break
       case '/index.html':
         sendFile(res, 'index.html')
+        break
+      case '/crud.js':
+        sendFile(res, 'crud.js', 'text/javascript')
         break
       case '/read':
         read(res);
@@ -64,16 +54,21 @@ function new_id() {
 
 // read all data from database and send to res
 function read(res) {
+  console.log("entered read function")
   var matches = [];
   db.each(
-    "SELECT id, redName, redScore, greenName, greenScore, winner, winType FROM tournament",  // database query
-    function(err, row) { matches.push(row) }, // called for each row returned
+    "SELECT id, redName, redScore, greenName, greenScore, winner, winType FROM matches",  // database query
+    function(err, row) { 
+      matches.push(row) 
+      console.log("current matches: " + row)}, // called for each row returned
     function() { res.end( JSON.stringify(matches) ) } // called last
   )
+  console.log("exited read function");
 }
 
 // update specific line in database, using info in req, the request from the client
 function update(res, req) {
+  console.log("updating database");
   //process incoming data
   let body = []
   req.on('data', (chunk) => {
@@ -85,9 +80,10 @@ function update(res, req) {
   })
 
   function process(row) {
-    if(debug) console.log(row)
+    console.log("made it into the process function")
+    console.log("row: " + JSON.stringify(row));
     var query = `
-      UPDATE tournament 
+      UPDATE matches 
       SET redName  = '${row.redName}',
           redScore = '${row.redScore}',
           greenName = '${row.greenName}',
@@ -97,7 +93,6 @@ function update(res, req) {
       WHERE
           id = '${row.id}'
     `
-    if(debug) console.log(query)
     db.run( 
       query,
       function(err) { res.end('match updated') }
