@@ -4,10 +4,14 @@ var matchArr = [];
 function create_row() {
     var x = document.getElementById("createTable");
     x.style.display = "block";
+    var y = document.getElementById("createButton");
+    y.setAttribute("disabled", "true");
 }
 function save_row() {
     var x = document.getElementById("createTable");
     x.style.display = "none";
+    var y = document.getElementById("createButton");
+    y.removeAttribute("disabled");
 
     var match = {};
     match.redName = document.getElementById('cRedName').innerHTML;
@@ -32,6 +36,8 @@ function cancel() {
     x.style.display = "none";
     var y = document.getElementById("updateTable");
     y.style.display = "none";
+    var z = document.getElementById("createButton");
+    z.removeAttribute("disabled");
 }
 function edit_row(id) {
     var x = document.getElementById("updateTable");
