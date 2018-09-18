@@ -10,8 +10,6 @@ function save_row() {
     x.style.display = "none";
 
     var match = {};
-    //match.id = document.getElementById('uId').innerHTML;
-    //match.id = new_id();
     match.redName = document.getElementById('cRedName').innerHTML;
     match.redScore = document.getElementById('cRedScore').innerHTML;
     match.greenName = document.getElementById('cGreenName').innerHTML;
@@ -72,6 +70,20 @@ function update_row() {
     }
     req.send(JSON.stringify(match));
 }
+function delete_row(id){
+    console.log("entered delete function");
+    match_current = matchArr.filter( function(d){ return d.id === id; } )[0];
+    console.log("match_current: " + JSON.stringify(match_current));
+
+    var req = new XMLHttpRequest();
+    req.open('POST', '/delete');
+    req.responseType = 'text';
+    req.onload = function() { 
+        console.log('delete done!'); 
+        location.reload(); 
+    }
+    req.send(JSON.stringify(match_current));
+}
 function build(rows) {
    for(let i = 0; i < rows.length; i++){
        console.log("entered build loop");
@@ -98,7 +110,7 @@ function build(rows) {
        var iden = rows[i].id;
 
        editBtn.innerHTML = '<button onclick="edit_row(\'' + iden + '\')">Edit</button>';
-       delBtn.innerHTML = '<button onclick="delete_row(' + rows[i].id + ')">Delete</button>';
+       delBtn.innerHTML = '<button onclick="delete_row(\'' + iden + '\')">Delete</button>';
    }
 }
 function read() {

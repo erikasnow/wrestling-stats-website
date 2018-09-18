@@ -29,6 +29,9 @@ var server = http.createServer(function (req, res) {
     case '/create':
       create(res, req);
       break
+    case '/delete':
+      del(res, req);
+      break
     case '/style.css':
       sendFile(res, 'style.css', 'text/css')
       break
@@ -57,7 +60,6 @@ function new_id() {
 
 // read all data from database and send to res
 function read(res) {
-  console.log("entered read function")
   var matches = [];
   db.each(
     "SELECT id, redName, redScore, greenName, greenScore, winner, winType FROM matches",  // database query
@@ -67,7 +69,6 @@ function read(res) {
     }, // called for each row returned
     function () { res.end(JSON.stringify(matches)) } // called last
   )
-  console.log("exited read function");
 }
 
 // update specific line in database, using info in req, the request from the client
@@ -106,7 +107,6 @@ function update(res, req) {
 
 function create(res, req) {
   console.log("creating new match in database");
-  //is this the same for PUT and POST?
   //process incoming data
   let body = []
   req.on('data', (chunk) => {
@@ -120,7 +120,6 @@ function create(res, req) {
   function process(row) {
     console.log("made it into the process function")
     console.log("row: " + JSON.stringify(row));
-    //what should this be?
     var query = `
         INSERT INTO matches (id, redName, redScore, greenName, greenScore, winner, winType)
         VALUES ('${new_id()}', '${row.redName}', '${row.redScore}', '${row.greenName}', 
@@ -129,6 +128,32 @@ function create(res, req) {
     db.run(
       query,
       function (err) { res.end('match created') }
+    )
+  }
+}
+
+function del(res, req) {
+  console.log("deleting match in database");
+  //process incoming data
+  let body = []
+  req.on('data', (chunk) => {
+    body.push(chunk)
+  }).on('end', () => {
+    body = Buffer.concat(body).toString()
+    process(JSON.parse(body))
+    res.end()
+  })
+
+  function process(row) {
+    console.log("made it into the process function")
+    console.log("row: " + JSON.stringify(row));
+    var query = `
+        DELETE FROM matches
+        WHERE id = '${row.id}';
+      `
+    db.run(
+      query,
+      function (err) { res.end('match deleted') }
     )
   }
 }
