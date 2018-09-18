@@ -1,50 +1,53 @@
 var http = require('http')
   , fs = require('fs')
   , url = require('url')
-  , sql  = require('sqlite3')
+  , sql = require('sqlite3')
   , port = 8080;
 
 // db setup
 var db = new sql.Database('tournament.sqlite');
 
 var server = http.createServer(function (req, res) {
-    var uri = url.parse(req.url)
-  
-    switch (uri.pathname) {
-      case '/':
-        sendFile(res, 'index.html')
-        break
-      case '/index.html':
-        sendFile(res, 'index.html')
-        break
-      case '/crud.js':
-        sendFile(res, 'crud.js', 'text/javascript')
-        break
-      case '/read':
-        read(res);
-        break
-      case '/update':
-        update(res, req);
-        break
-      case '/style.css':
-        sendFile(res, 'style.css', 'text/css')
-        break
-      default:
-        res.end('404 not found')
-    }
-  })
+  var uri = url.parse(req.url)
+
+  switch (uri.pathname) {
+    case '/':
+      sendFile(res, 'index.html')
+      break
+    case '/index.html':
+      sendFile(res, 'index.html')
+      break
+    case '/crud.js':
+      sendFile(res, 'crud.js', 'text/javascript')
+      break
+    case '/read':
+      read(res);
+      break
+    case '/update':
+      update(res, req);
+      break
+    case '/create':
+      create(res, req);
+      break
+    case '/style.css':
+      sendFile(res, 'style.css', 'text/css')
+      break
+    default:
+      res.end('404 not found')
+  }
+})
 
 server.listen(process.env.PORT || port);
 console.log('listening on 8080');
 
 /*------subroutines-------*/
 function sendFile(res, filename, contentType) {
-    contentType = contentType || 'text/html';
-  
-    fs.readFile(filename, function (error, content) {
-      res.writeHead(200, { 'Content-type': contentType })
-      res.end(content, 'utf-8')
-    })
+  contentType = contentType || 'text/html';
+
+  fs.readFile(filename, function (error, content) {
+    res.writeHead(200, { 'Content-type': contentType })
+    res.end(content, 'utf-8')
+  })
 }
 
 // common technique for a 'unique' alphanumeric id 
@@ -58,10 +61,11 @@ function read(res) {
   var matches = [];
   db.each(
     "SELECT id, redName, redScore, greenName, greenScore, winner, winType FROM matches",  // database query
-    function(err, row) { 
-      matches.push(row) 
-      console.log("current matches: " + row)}, // called for each row returned
-    function() { res.end( JSON.stringify(matches) ) } // called last
+    function (err, row) {
+      matches.push(row)
+      console.log("current matches: " + row)
+    }, // called for each row returned
+    function () { res.end(JSON.stringify(matches)) } // called last
   )
   console.log("exited read function");
 }
@@ -75,7 +79,7 @@ function update(res, req) {
     body.push(chunk)
   }).on('end', () => {
     body = Buffer.concat(body).toString()
-    process( JSON.parse(body) )
+    process(JSON.parse(body))
     res.end()
   })
 
@@ -93,9 +97,38 @@ function update(res, req) {
       WHERE
           id = '${row.id}'
     `
-    db.run( 
+    db.run(
       query,
-      function(err) { res.end('match updated') }
+      function (err) { res.end('match updated') }
+    )
+  }
+}
+
+function create(res, req) {
+  console.log("creating new match in database");
+  //is this the same for PUT and POST?
+  //process incoming data
+  let body = []
+  req.on('data', (chunk) => {
+    body.push(chunk)
+  }).on('end', () => {
+    body = Buffer.concat(body).toString()
+    process(JSON.parse(body))
+    res.end()
+  })
+
+  function process(row) {
+    console.log("made it into the process function")
+    console.log("row: " + JSON.stringify(row));
+    //what should this be?
+    var query = `
+        INSERT INTO matches (id, redName, redScore, greenName, greenScore, winner, winType)
+        VALUES ('${new_id()}', '${row.redName}', '${row.redScore}', '${row.greenName}', 
+          '${row.greenScore}', '${row.winner}', '${row.winType}');
+      `
+    db.run(
+      query,
+      function (err) { res.end('match created') }
     )
   }
 }

@@ -8,6 +8,26 @@ function create_row() {
 function save_row() {
     var x = document.getElementById("createTable");
     x.style.display = "none";
+
+    var match = {};
+    //match.id = document.getElementById('uId').innerHTML;
+    //match.id = new_id();
+    match.redName = document.getElementById('cRedName').innerHTML;
+    match.redScore = document.getElementById('cRedScore').innerHTML;
+    match.greenName = document.getElementById('cGreenName').innerHTML;
+    match.greenScore = document.getElementById('cGreenScore').innerHTML;
+    match.winner = document.getElementById('cWinner').innerHTML;
+    match.winType = document.getElementById('cWinType').innerHTML;
+
+    console.log("match: " + JSON.stringify(match));
+    var req = new XMLHttpRequest();
+    req.open('POST', '/create');
+    req.responseType = 'text';
+    req.onload = function() { 
+        console.log('create done!'); 
+        location.reload(); 
+    }
+    req.send(JSON.stringify(match));
 }
 function cancel() {
     var x = document.getElementById("createTable");
@@ -16,7 +36,6 @@ function cancel() {
     y.style.display = "none";
 }
 function edit_row(id) {
-    //console.log("id: " + JSON.stringify(id));
     var x = document.getElementById("updateTable");
     x.style.display = "block";
 
