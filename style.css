@@ -22,3 +22,7 @@ button {
 .score {
     width: 100px;
 }
+
+.editBtn:hover:enabled, .delBtn:hover:enabled{
+    background-color: lightgrey;
+}
