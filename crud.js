@@ -8,6 +8,8 @@ function create_row() {
     //disable every button but save and cancel
     var y = document.getElementById("createButton");
     y.setAttribute("disabled", "true");
+    var z = document.getElementById("wrestlerButton");
+    z.setAttribute("disabled", "true");
     var editBtns = document.getElementsByClassName("editBtn");
     var delBtns = document.getElementsByClassName("delBtn");
     for (let i = 0; i < editBtns.length; i++) {
@@ -23,6 +25,8 @@ function save_row() {
     //enable all the disabled buttons
     var y = document.getElementById("createButton");
     y.removeAttribute("disabled");
+    var z = document.getElementById("wrestlerButton");
+    z.removeAttribute("disabled");
     var editBtns = document.getElementsByClassName("editBtn");
     var delBtns = document.getElementsByClassName("delBtn");
     for (let i = 0; i < editBtns.length; i++) {
@@ -55,10 +59,14 @@ function cancel() {
     x.style.display = "none";
     var y = document.getElementById("updateTable");
     y.style.display = "none";
+    var b = document.getElementById("wrestlerTable");
+    b.style.display = "none";
 
     //enable all the disabled buttons
     var z = document.getElementById("createButton");
     z.removeAttribute("disabled");
+    var a = document.getElementById("wrestlerButton");
+    a.removeAttribute("disabled");
     var editBtns = document.getElementsByClassName("editBtn");
     var delBtns = document.getElementsByClassName("delBtn");
     for (let i = 0; i < editBtns.length; i++) {
@@ -74,6 +82,8 @@ function edit_row(id) {
     //disable every button but update and cancel
     var y = document.getElementById("createButton");
     y.setAttribute("disabled", "true");
+    var a = document.getElementById("wrestlerButton");
+    a.setAttribute("disabled", "true");
     var editBtns = document.getElementsByClassName("editBtn");
     var delBtns = document.getElementsByClassName("delBtn");
     for (let i = 0; i < editBtns.length; i++) {
@@ -99,6 +109,8 @@ function update_row() {
     //enable all the disabled buttons
     var z = document.getElementById("createButton");
     z.removeAttribute("disabled");
+    var a = document.getElementById("wrestlerButton");
+    a.removeAttribute("disabled");
     var editBtns = document.getElementsByClassName("editBtn");
     var delBtns = document.getElementsByClassName("delBtn");
     for (let i = 0; i < editBtns.length; i++) {

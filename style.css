@@ -23,6 +23,10 @@ button {
     width: 100px;
 }
 
-.editBtn:hover:enabled, .delBtn:hover:enabled{
-    background-color: lightgrey;
+.editBtn:hover:enabled {
+    border-color: blue;
+}
+
+.delBtn:hover:enabled {
+    border-color: red;
 }

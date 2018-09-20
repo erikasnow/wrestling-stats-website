@@ -20,6 +20,9 @@ var server = http.createServer(function (req, res) {
     case '/crud.js':
       sendFile(res, 'crud.js', 'text/javascript')
       break
+    case '/extra.js':
+      sendFile(res, 'extra.js', 'text/javascript')
+      break
     case '/read':
       read(res);
       break
@@ -31,6 +34,9 @@ var server = http.createServer(function (req, res) {
       break
     case '/delete':
       del(res, req);
+      break
+    case '/getWrestlerInfo':
+      getWrestlerInfo(res, req);
       break
     case '/style.css':
       sendFile(res, 'style.css', 'text/css')
@@ -69,6 +75,55 @@ function read(res) {
     }, // called for each row returned
     function () { res.end(JSON.stringify(matches)) } // called last
   )
+}
+
+var wrestler = {};
+// get specific wrestler's info
+function getWrestlerInfo(res, req) {
+  console.log("grabbing wrestler info");
+  console.log("json: " + req);
+
+  //process incoming data
+  let body = []
+  req.on('data', (chunk) => {
+    body.push(chunk)
+  }).on('end', () => {
+    body = Buffer.concat(body).toString()
+
+    //need to get the wrestler name from the request
+    wrestler = JSON.parse(body); //something wrong with this line
+    console.log('wrestler: ' + wrestler.name);
+    //need to filter all rows with wrestler name as winner
+    var points = 0;
+    var wrestlerData = {};
+    db.each(
+      `SELECT winType FROM matches WHERE winner = '${wrestler.name}'`,
+      function (err, row) {
+        switch (row.winType) {
+          case 'Pin':
+            points += 6;
+            break
+          case 'Technical Pin':
+            points += 5;
+            break
+          case 'Major':
+            points += 4;
+            break
+          case 'Minor':
+            points += 3;
+            break
+          default:
+            break
+        }
+        console.log("current points: " + points);
+      }, //called for each row returned
+      function () {
+        wrestlerData.name = wrestler.name;
+        wrestlerData.points = points;
+        res.end(JSON.stringify(wrestlerData));
+      } // called last
+    )
+  })
 }
 
 // update specific line in database, using info in req, the request from the client
